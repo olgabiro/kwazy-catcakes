@@ -29,7 +29,7 @@ func set_type(t: int) -> void:
 	type = t
 	_refresh_texture()
 
-func randomize_type(rng: RandomNumberGenerator, cat_chance := 0.15) -> void:
+func randomize_type(rng: RandomNumberGenerator, cat_chance := 0.07) -> void:
 	if rng.randf() < cat_chance:
 		set_type(TYPE_CAT)
 	else:
@@ -66,8 +66,8 @@ func _refresh_texture() -> void:
 
 func pop() -> void:
 	var t := create_tween()
-	t.tween_property(sprite, "scale", Vector2(1.2, 1.2), 0.08).set_ease(Tween.EASE_OUT)
-	t.tween_property(self, "modulate:a", 0.0, 0.12)
+	t.tween_property(sprite, "scale", base_scale * 1.15, 0.12).set_ease(Tween.EASE_OUT)
+	t.tween_property(self, "modulate:a", 0.0, 0.22)
 
 func fit_to(size: float) -> void:
 	if sprite.texture:

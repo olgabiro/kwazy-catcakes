@@ -53,7 +53,8 @@ func _init_grid() -> void:
 
 func grid_to_pixel(g: Vector2i) -> Vector2:
 	var origin := Vector2((COLS * TILE_SIZE) * -0.5 + TILE_SIZE*0.5, (ROWS * TILE_SIZE) * -0.5 + TILE_SIZE*0.5)
-	return origin + Vector2(g.x * TILE_SIZE, g.y * TILE_SIZE)
+	var p := origin + Vector2(g.x * TILE_SIZE, g.y * TILE_SIZE)
+	return Vector2(round(p.x), round(p.y))
 
 func _on_tile_clicked(t: Tile) -> void:
 	var mouse := get_viewport().get_mouse_position()
@@ -108,7 +109,7 @@ func _perform_swap(a: Tile, b: Tile) -> void:
 
 func _animate_move(t: Tile) -> void:
 	var target := grid_to_pixel(t.grid_pos)
-	create_tween().tween_property(t, "position", target, 0.1)
+	create_tween().tween_property(t, "position", target, 0.16)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and is_dragging and selected != null:
@@ -148,7 +149,7 @@ func _find_matches() -> Array[Vector2i]:
 		var run_type := -1
 		var run_start := 0
 		var run_len := 0
-		for x in COLS:
+		for x in range(COLS):
 			var t: Tile = grid[x][y] as Tile
 			var tp := t.type
 			if tp == run_type:
@@ -169,7 +170,7 @@ func _find_matches() -> Array[Vector2i]:
 		var run_type := -1
 		var run_start := 0
 		var run_len := 0
-		for y in ROWS:
+		for y in range(ROWS):
 			var t: Tile = grid[x][y] as Tile
 			var tp := t.type
 			if tp == run_type:
@@ -196,6 +197,11 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 	if cat_count >= 3:
 		hearts -= 1
 		emit_signal("hearts_changed", hearts)
+		# show explosion particles at cat positions
+		for p in initial:
+			var tcat: Tile = grid[p.x][p.y] as Tile
+			if tcat and tcat.is_cat():
+				_spawn_explosion(grid_to_pixel(p))
 		# add neighbors around each cat
 		for p in initial:
 			if grid[p.x][p.y].is_cat():
@@ -215,16 +221,20 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 			emit_signal("score_changed", score)
 			t.queue_free()
 			grid[p.x][p.y] = null
+	await get_tree().create_timer(0.25).timeout
 	# gravity and refill
 	for x in range(COLS):
 		var write_y := ROWS-1
 		for y in range(ROWS-1, -1, -1):
 			if grid[x][y] != null:
 				if y != write_y:
-					grid[x][write_y] = grid[x][y]
+					var moved: Tile = grid[x][y]
+					grid[x][write_y] = moved
 					grid[x][y] = null
 					grid[x][write_y].set_grid_pos(Vector2i(x, write_y))
-					_animate_move(grid[x][write_y])
+					if moved.is_cat():
+						moved.make_angry()
+					_animate_move(moved)
 				write_y -= 1
 		for y in range(write_y, -1, -1):
 			var t: Tile = tile_scene.instantiate()
@@ -250,6 +260,20 @@ func _unique_positions(arr: Array[Vector2i]) -> Array[Vector2i]:
 	for v in d.values():
 		out.append(v as Vector2i)
 	return out
+
+func _spawn_explosion(pos: Vector2) -> void:
+	var p := CPUParticles2D.new()
+	p.one_shot = true
+	p.amount = 80
+	p.lifetime = 0.6
+	p.emitting = true
+	p.gravity = Vector2.ZERO
+	p.initial_velocity_min = 120
+	p.initial_velocity_max = 220
+	p.spread = 360
+	p.position = pos
+	p.texture = Sprites.dessert_texture(0)
+	add_child(p)
 
 func _in_bounds(p: Vector2i) -> bool:
 	return p.x>=0 and p.y>=0 and p.x<COLS and p.y<ROWS

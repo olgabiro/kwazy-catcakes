@@ -19,8 +19,8 @@ func _ready() -> void:
 	score_label.add_theme_color_override("font_color", font_col)
 	hearts_label.add_theme_color_override("font_color", font_col)
 	moves_label.add_theme_color_override("font_color", font_col)
-	# Center board
-	$Board.position = get_viewport_rect().size * 0.5
+	# Layout board: top margin so bottom row isn't cropped
+	_layout_board()
 	# Connect signals
 	board.score_changed.connect(_on_score_changed)
 	board.hearts_changed.connect(_on_hearts_changed)
@@ -42,15 +42,44 @@ func _on_moves_changed(v:int) -> void:
 
 func _on_game_over() -> void:
 	music.stop()
-	var over := Label.new()
-	over.text = "Game Over\nClick to restart"
-	over.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	over.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	over.size = get_viewport_rect().size
-	over.add_theme_color_override("font_color", Color.from_string("#2D9CDB", Color.SKY_BLUE))
-	$CanvasLayer/HUD.add_child(over)
+	var overlay := Control.new()
+	overlay.name = "GameOverOverlay"
+	overlay.anchor_right = 1.0
+	overlay.anchor_bottom = 1.0
+	$CanvasLayer/HUD.add_child(overlay)
+	var center := CenterContainer.new()
+	center.anchor_right = 1.0
+	center.anchor_bottom = 1.0
+	overlay.add_child(center)
+	var label := Label.new()
+	label.text = "Game Over\nClick to restart"
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color.from_string("#2D9CDB", Color.SKY_BLUE))
+	# compute box size from text
+	var pad := Vector2(28, 18)
+	var box_size := label.get_minimum_size() + pad * 2.0
+	var panel := ColorRect.new()
+	panel.color = Color(0,0,0,0.55)
+	panel.custom_minimum_size = box_size
+	center.add_child(panel)
+	label.position = pad
+	label.size = box_size - pad * 2.0
+	panel.add_child(label)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if board.hearts <= 0 or board.moves_left <= 0:
 			get_tree().reload_current_scene()
+
+func _notification(what):
+	if what == NOTIFICATION_WM_SIZE_CHANGED:
+		_layout_board()
+
+func _layout_board() -> void:
+	var vp := get_viewport_rect().size
+	var board_px := Vector2(Board.COLS * Board.TILE_SIZE, Board.ROWS * Board.TILE_SIZE)
+	var top_margin := 90.0
+	var x := vp.x * 0.5
+	var y := top_margin + board_px.y * 0.5
+	$Board.position = Vector2(x, y)
