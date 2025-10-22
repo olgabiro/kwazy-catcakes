@@ -3,6 +3,7 @@ class_name Tile
 
 signal clicked(tile: Tile)
 signal scratched
+signal explosion(v:Vector2)
 
 const TYPE_CUPCAKE := 0
 const TYPE_DONUT := 1
@@ -40,22 +41,32 @@ func make_angry() -> void:
 		anger = clamp(anger + 1, 0, 3)
 		_refresh_texture()
 		if anger >= 3:
-			anger = 0
 			emit_signal("scratched")
+			emit_signal("explosion", Vector2(-50, -50))
+			calm_down()
 
 func calm_down() -> void:
 	anger = 0
 	_refresh_texture()
+	
+func modulate_anger() -> void:
+	var r = 1.0 + 0.3 * anger
+	var g = 1.0 - 0.2 * anger
+	var b = 1.0 - 0.2 * anger
+	sprite.modulate = Color(r, g, b, 1.0)
 
 func _refresh_texture() -> void:
 	if is_cat():
+		modulate_anger()
 		match anger:
 			0:
 				sprite.texture = Sprites.cat_happy()
 			1:
 				sprite.texture = Sprites.cat_grumpy1()
-			_:
+			2:
 				sprite.texture = Sprites.cat_grumpy2()
+			3:
+				sprite.modulate = Color(1.3, 0.7, 0.7, 1.0)
 	else:
 		var idx := type # 0..4 desserts
 		# atlas dessert order: 0 burst, 1 cupcake, 2 donut, 3 macaron, 4 cake, 5 ice cream

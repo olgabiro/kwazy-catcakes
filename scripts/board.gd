@@ -4,6 +4,7 @@ class_name Board
 signal score_changed(v:int)
 signal hearts_changed(v:int)
 signal moves_changed(v:int)
+signal explosion(v:Vector2)
 signal game_over
 
 const COLS := 8
@@ -37,6 +38,7 @@ func _emit_all() -> void:
 
 func _init_grid() -> void:
 	grid.resize(COLS)
+	explosion.connect(_spawn_explosion)
 	for x in range(COLS):
 		grid[x] = []
 		for y in range(ROWS):
@@ -49,6 +51,7 @@ func _init_grid() -> void:
 				t.randomize_type(rng)
 			t.clicked.connect(_on_tile_clicked)
 			t.scratched.connect(_on_tile_scratched)
+			t.explosion.connect(_spawn_explosion)
 			grid[x].append(t)
 
 func grid_to_pixel(g: Vector2i) -> Vector2:
@@ -201,7 +204,8 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 		for p in initial:
 			var tcat: Tile = grid[p.x][p.y] as Tile
 			if tcat and tcat.is_cat():
-				_spawn_explosion(grid_to_pixel(p))
+				emit_signal("explosion", grid_to_pixel(p))
+				
 		# add neighbors around each cat
 		for p in initial:
 			if grid[p.x][p.y].is_cat():
