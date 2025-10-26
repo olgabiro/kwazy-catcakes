@@ -198,8 +198,7 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 		if grid[p.x][p.y].is_cat():
 			cat_count += 1
 	if cat_count >= 3:
-		hearts -= 1
-		emit_signal("hearts_changed", hearts)
+		
 		# show explosion particles at cat positions
 		for p in initial:
 			var tcat: Tile = grid[p.x][p.y] as Tile
@@ -214,6 +213,8 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 						var q := Vector2i(nx,ny)
 						if _in_bounds(q):
 							to_clear.append(q)
+		hearts -= 1
+		emit_signal("hearts_changed", hearts)
 	# unique
 	to_clear = _unique_positions(to_clear)
 	# pop and delete
