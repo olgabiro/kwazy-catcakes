@@ -46,6 +46,12 @@ func _on_game_over() -> void:
 	overlay.name = "GameOverOverlay"
 	overlay.anchor_right = 1.0
 	overlay.anchor_bottom = 1.0
+	# Make overlay clickable to restart
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.gui_input.connect(func(event: InputEvent):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			get_tree().reload_current_scene()
+	)
 	$CanvasLayer/HUD.add_child(overlay)
 	var center := CenterContainer.new()
 	center.anchor_right = 1.0
@@ -55,12 +61,12 @@ func _on_game_over() -> void:
 	label.text = "Game Over\nClick to restart"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_color_override("font_color", Color.from_string("#2D9CDB", Color.SKY_BLUE))
+	label.add_theme_color_override("font_color", Color.from_string("#2D9CB", Color.FIREBRICK))
 	# compute box size from text
-	var pad := Vector2(28, 18)
+	var pad := Vector2(100, 18)
 	var box_size := label.get_minimum_size() + pad * 2.0
 	var panel := ColorRect.new()
-	panel.color = Color(0,0,0,0.55)
+	panel.color = Color(0,0,0,0.9)
 	panel.custom_minimum_size = box_size
 	center.add_child(panel)
 	label.position = pad

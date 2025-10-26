@@ -79,9 +79,6 @@ func _is_adjacent(a: Vector2i, b: Vector2i) -> bool:
 
 
 func _perform_swap(a: Tile, b: Tile) -> void:
-	# move count
-	moves_left -= 1
-	emit_signal("moves_changed", moves_left)
 	# swap in grid
 	var ga := a.grid_pos
 	var gb := b.grid_pos
@@ -91,9 +88,6 @@ func _perform_swap(a: Tile, b: Tile) -> void:
 	b.set_grid_pos(ga)
 	_animate_move(a)
 	_animate_move(b)
-	# Cats get angry if moved
-	if a.is_cat(): a.make_angry()
-	if b.is_cat(): b.make_angry()
 	# resolve
 	await get_tree().process_frame
 	var matched := _find_matches()
@@ -106,6 +100,11 @@ func _perform_swap(a: Tile, b: Tile) -> void:
 		_animate_move(a)
 		_animate_move(b)
 		return
+	moves_left -= 1
+	emit_signal("moves_changed", moves_left)
+	# Cats get angry if moved
+	if a.is_cat(): a.make_angry()
+	if b.is_cat(): b.make_angry()
 	_clear_and_cascade(matched)
 	if moves_left <= 0 or hearts <= 0:
 		emit_signal("game_over")
@@ -130,7 +129,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				var other: Tile = grid[target.x][target.y]
 				if other:
 					_perform_swap(selected, other)
-			selected.set_selected(false)
+			if selected != null:
+				selected.set_selected(false)
 			selected = null
 			is_dragging = false
 	elif event is InputEventMouseButton and not event.pressed:
