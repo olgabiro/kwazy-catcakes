@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 movie_writer/movie_file="/Users/olgabiro/development/kwazy-catcakes/target/playthrough.png"
 
+[gui]
+
+theme/default_theme_scale=2.0
+
 [rendering]
 
 renderer/rendering_method="mobile"
