@@ -4,7 +4,6 @@ extends Node2D
 @onready var score_label: Label = $CanvasLayer/HUD/Score
 @onready var hearts_label: Label = $CanvasLayer/HUD/Hearts
 @onready var moves_label: Label = $CanvasLayer/HUD/Moves
-@onready var bg: ColorRect = $BG
 @onready var music: AudioStreamPlayer = $Music
 
 func _ready() -> void:
@@ -13,13 +12,11 @@ func _ready() -> void:
 	add_child(theme_node)
 	theme_node.load_colors()
 	var colors := theme_node.colors
-	bg.color = Color.from_string(str(colors.get("shadow-purple", "#2B2255")), Color(0.12,0.1,0.2))
 	# Improve HUD contrast
 	var font_col := Color.from_string(str(colors.get("highlight-white", "#F1F1F1")), Color(1,1,1))
 	score_label.add_theme_color_override("font_color", font_col)
 	hearts_label.add_theme_color_override("font_color", font_col)
 	moves_label.add_theme_color_override("font_color", font_col)
-	# Layout board: top margin so bottom row isn't cropped
 	_layout_board()
 	# Connect signals
 	board.score_changed.connect(_on_score_changed)

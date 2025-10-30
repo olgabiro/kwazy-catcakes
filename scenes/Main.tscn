@@ -8,10 +8,10 @@
 script = ExtResource("1")
 
 [node name="BG" type="ColorRect" parent="."]
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+color = Color(0.16862746, 0.13333334, 0.33333334, 1)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
