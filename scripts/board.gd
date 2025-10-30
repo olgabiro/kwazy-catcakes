@@ -8,8 +8,8 @@ signal explosion(v:Vector2)
 signal game_over
 
 const COLS := 8
-const ROWS := 8
-const TILE_SIZE := 96.0
+const ROWS := 7
+const TILE_SIZE := 128.0
 const MOVE_LIMIT := 30
 const START_HEARTS := 5
 

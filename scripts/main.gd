@@ -26,13 +26,9 @@ func _ready() -> void:
 	board.hearts_changed.connect(_on_hearts_changed)
 	board.moves_changed.connect(_on_moves_changed)
 	board.game_over.connect(_on_game_over)
-	# Loop background music
-	if not music.finished.is_connected(func(): pass):
-		music.finished.connect(func(): music.play())
-	music.play()
 
 func _on_score_changed(v:int) -> void:
-	score_label.text = str(v)
+	score_label.text = "Score: %d" % v
 
 func _on_hearts_changed(v:int) -> void:
 	hearts_label.text = "❤".repeat(max(v,0))
@@ -62,15 +58,13 @@ func _on_game_over() -> void:
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_color_override("font_color", Color.from_string("#2D9CB", Color.FIREBRICK))
-	# compute box size from text
-	var pad := Vector2(400, 5)
-	var box_size := label.get_minimum_size() + pad * 2.0
+	label.add_theme_font_size_override("font_size", 70)
+
 	var panel := ColorRect.new()
 	panel.color = Color(0,0,0,0.9)
-	panel.custom_minimum_size = box_size
+	panel.custom_minimum_size = Vector2(1920, 100)
 	center.add_child(panel)
-	label.position = pad
-	#label.size = box_size - pad * 2.0
+	label.position = Vector2(800, 0)
 	panel.add_child(label)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -85,7 +79,7 @@ func _notification(what):
 func _layout_board() -> void:
 	var vp := get_viewport_rect().size
 	var board_px := Vector2(Board.COLS * Board.TILE_SIZE, Board.ROWS * Board.TILE_SIZE)
-	var top_margin := 90.0
+	var top_margin := 100.0
 	var x := vp.x * 0.5
 	var y := top_margin + board_px.y * 0.5
 	$Board.position = Vector2(x, y)
