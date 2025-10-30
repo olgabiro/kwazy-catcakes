@@ -24,6 +24,10 @@ func _ready() -> void:
 	board.hearts_changed.connect(_on_hearts_changed)
 	board.moves_changed.connect(_on_moves_changed)
 	board.game_over.connect(_on_game_over)
+	
+	if not music.finished.is_connected(func(): pass):
+		music.finished.connect(func(): music.play())
+	music.play()
 
 func _on_score_changed(v:int) -> void:
 	score_label.text = "Score: %d" % v
