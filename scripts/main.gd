@@ -33,7 +33,7 @@ func _on_score_changed(v:int) -> void:
 	score_label.text = "Score: %d" % v
 
 func _on_hearts_changed(v:int) -> void:
-	hearts_label.text = "❤".repeat(max(v,0))
+	hearts_label.text = "❤".repeat(max(v,0)) + "🖤".repeat(min(5-v,5))
 
 func _on_moves_changed(v:int) -> void:
 	moves_label.text = "Moves: %d" % v
