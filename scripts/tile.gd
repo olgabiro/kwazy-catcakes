@@ -38,9 +38,9 @@ func randomize_type(rng: RandomNumberGenerator, cat_chance := 0.07) -> void:
 
 func make_angry() -> void:
 	if is_cat():
-		anger = clamp(anger + 1, 0, 2)
+		anger = clamp(anger + 1, 0, 3)
 		_refresh_texture()
-		if anger >= 2:
+		if anger >= 3:
 			emit_signal("scratched")
 			emit_signal("explosion", Vector2(-50, -50))
 			calm_down()
@@ -61,7 +61,7 @@ func _refresh_texture() -> void:
 		match anger:
 			0:
 				sprite.texture = Sprites.cat_happy()
-			1, 2:
+			1, 2, 3:
 				sprite.texture = Sprites.cat_angry()
 	else:
 		var idx := type # 0..4 desserts
@@ -87,6 +87,6 @@ func set_selected(selected: bool) -> void:
 	var target := base_scale * 1.06 if selected else base_scale
 	create_tween().tween_property(sprite, "scale", target, 0.08)
 
-func _input_event(viewport: Viewport, event: InputEvent, shape_idx: int) -> void:
+func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		emit_signal("clicked", self)

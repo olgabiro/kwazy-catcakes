@@ -251,6 +251,7 @@ func _clear_and_cascade(initial: Array[Vector2i]) -> void:
 			t.clicked.connect(_on_tile_clicked)
 			t.scratched.connect(_on_tile_scratched)
 			t.fit_to(TILE_SIZE * 0.9)
+			t.explosion.connect(_spawn_explosion)
 			_animate_move(t)
 	await get_tree().create_timer(0.15).timeout
 	var next := _find_matches()
