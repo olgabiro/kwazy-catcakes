@@ -15,7 +15,8 @@ func _ready() -> void:
 	# Improve HUD contrast
 	var font_col := Color.from_string(str(colors.get("highlight-white", "#F1F1F1")), Color(1,1,1))
 	score_label.add_theme_color_override("font_color", font_col)
-	hearts_label.add_theme_color_override("font_color", font_col)
+	var emoji_font = load("res://assets/fonts/NotoColorEmoji.ttf")
+	hearts_label.add_theme_font_override("font", emoji_font)
 	moves_label.add_theme_color_override("font_color", font_col)
 	_layout_board()
 	# Connect signals
