@@ -277,7 +277,7 @@ func _spawn_explosion(pos: Vector2) -> void:
 	p.initial_velocity_max = 220
 	p.spread = 360
 	p.position = pos
-	p.texture = Sprites.dessert_texture(0)
+	p.texture = Sprites.kaboom()
 	add_child(p)
 
 func _in_bounds(p: Vector2i) -> bool:

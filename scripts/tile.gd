@@ -38,9 +38,9 @@ func randomize_type(rng: RandomNumberGenerator, cat_chance := 0.07) -> void:
 
 func make_angry() -> void:
 	if is_cat():
-		anger = clamp(anger + 1, 0, 3)
+		anger = clamp(anger + 1, 0, 2)
 		_refresh_texture()
-		if anger >= 3:
+		if anger >= 2:
 			emit_signal("scratched")
 			emit_signal("explosion", Vector2(-50, -50))
 			calm_down()
@@ -61,16 +61,11 @@ func _refresh_texture() -> void:
 		match anger:
 			0:
 				sprite.texture = Sprites.cat_happy()
-			1:
-				sprite.texture = Sprites.cat_grumpy1()
-			2:
-				sprite.texture = Sprites.cat_grumpy2()
-			3:
-				sprite.modulate = Color(1.3, 0.7, 0.7, 1.0)
+			1, 2:
+				sprite.texture = Sprites.cat_angry()
 	else:
 		var idx := type # 0..4 desserts
-		# atlas dessert order: 0 burst, 1 cupcake, 2 donut, 3 macaron, 4 cake, 5 ice cream
-		sprite.texture = Sprites.dessert_texture(idx + 1)
+		sprite.texture = Sprites.dessert_texture(idx)
 	# fit to cell if set
 	if sprite.texture:
 		fit_to(Board.TILE_SIZE * 0.9)

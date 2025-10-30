@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://boh8ascub6smh"
-path="res://.godot/imported/kitten_angry1.png-85860790771b40bbfca3fd960c1a65ef.ctex"
+uid="uid://12blsb1dwdg7"
+path="res://.godot/imported/macaron.png-0a32cfa3227b26f5ba7c8825b51635e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/kitten_angry1.png"
-dest_files=["res://.godot/imported/kitten_angry1.png-85860790771b40bbfca3fd960c1a65ef.ctex"]
+source_file="res://assets/sprites/macaron.png"
+dest_files=["res://.godot/imported/macaron.png-0a32cfa3227b26f5ba7c8825b51635e1.ctex"]
 
 [params]
 

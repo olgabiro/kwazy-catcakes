@@ -58,19 +58,19 @@ func _on_game_over() -> void:
 	center.anchor_bottom = 1.0
 	overlay.add_child(center)
 	var label := Label.new()
-	label.text = "Game Over\nClick to restart"
+	label.text = "YOU DIED"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_color_override("font_color", Color.from_string("#2D9CB", Color.FIREBRICK))
 	# compute box size from text
-	var pad := Vector2(100, 18)
+	var pad := Vector2(400, 5)
 	var box_size := label.get_minimum_size() + pad * 2.0
 	var panel := ColorRect.new()
 	panel.color = Color(0,0,0,0.9)
 	panel.custom_minimum_size = box_size
 	center.add_child(panel)
 	label.position = pad
-	label.size = box_size - pad * 2.0
+	#label.size = box_size - pad * 2.0
 	panel.add_child(label)
 
 func _unhandled_input(event: InputEvent) -> void:

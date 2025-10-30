@@ -2,6 +2,7 @@ extends Node
 class_name Sprites
 
 const ATLAS_PATH := "res://assets/sprites/sprites.png"
+const DONUT_PATH := "res://assets/sprites/donut.png"
 const COLS := 3
 const ROWS := 3
 
@@ -23,30 +24,26 @@ static func make_region(col:int, row:int) -> AtlasTexture:
 	t.region = rect(col,row)
 	return t
 
-static func cat_happy() -> AtlasTexture:
-	return make_region(0,0)
+static func cat_happy() -> Texture2D:
+	return load("res://assets/sprites/kitten happy.png")
+	
+static func cat_angry() -> Texture2D:
+	return load("res://assets/sprites/kitten angry.png")
 
-static func cat_grumpy1() -> AtlasTexture:
-	return make_region(1,0)
-
-static func cat_grumpy2() -> AtlasTexture:
-	return make_region(2,0)
-
-static func dessert_regions() -> Array[Rect2i]:
+static func kaboom() -> Texture2D:
+	return load("res://assets/sprites/kaboom.png")
+	
+static func dessert_textures() -> Array[Texture2D]:
 	return [
-		rect(0,1), # burst/star
-		rect(1,1), # cupcake
-		rect(2,1), # donut
-		rect(0,2), # macaron
-		rect(1,2), # cake
-		rect(2,2)  # ice cream
+		load("res://assets/sprites/cupcake.png"),
+		load("res://assets/sprites/donut.png"),
+		load("res://assets/sprites/macaron.png"),
+		load("res://assets/sprites/cake.png"),
+		load("res://assets/sprites/ice cream.png")
 	]
 
 static func dessert_texture(index:int) -> AtlasTexture:
-	var t := AtlasTexture.new()
-	t.atlas = atlas()
-	t.region = dessert_regions()[index]
-	return t
+	return dessert_textures()[index]
 
 static func random_dessert_index(rng: RandomNumberGenerator) -> int:
-	return rng.randi_range(0, dessert_regions().size() - 1)
+	return rng.randi_range(0, dessert_textures().size() - 1)
