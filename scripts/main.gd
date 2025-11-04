@@ -73,3 +73,13 @@ func _layout_board() -> void:
 	var x := vp.x * 0.5
 	var y := top_margin + board_px.y * 0.5
 	$Board.position = Vector2(x, y)
+
+func _on_check_button_toggled(toggled_on: bool) -> void:
+	var background_index = AudioServer.get_bus_index("Background")
+	var sfx_index = AudioServer.get_bus_index("SFX")
+	if toggled_on:
+		AudioServer.set_bus_mute(background_index, true)
+		AudioServer.set_bus_mute(sfx_index, true)
+	else:
+		AudioServer.set_bus_mute(background_index, false)
+		AudioServer.set_bus_mute(sfx_index, false)

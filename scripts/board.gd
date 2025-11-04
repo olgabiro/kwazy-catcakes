@@ -15,6 +15,7 @@ var grid: Array = [] # 2D: [x][y] -> Tile
 var selected: Tile
 var rng := RandomNumberGenerator.new()
 var score := 0
+var max_score := 0
 var hearts := START_HEARTS
 var is_dragging := false
 var drag_start := Vector2.ZERO
