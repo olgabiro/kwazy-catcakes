@@ -8,6 +8,7 @@ signal grabbed(dessert: Dessert)
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
+@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 func _ready() -> void:
 	sprite.texture = Sprites.cat_happy()
