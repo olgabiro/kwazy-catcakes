@@ -23,6 +23,8 @@ var is_dragging := false
 var drag_start := Vector2.ZERO
 var drag_threshold := 18.0
 
+@onready var audio_stream_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+
 var tile_scene: PackedScene = null
 
 func _ready() -> void:
@@ -268,6 +270,7 @@ func _unique_positions(arr: Array[Vector2i]) -> Array[Vector2i]:
 	return out
 
 func _spawn_explosion(pos: Vector2) -> void:
+	audio_stream_player.play()
 	var p := CPUParticles2D.new()
 	p.one_shot = true
 	p.amount = 80

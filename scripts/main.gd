@@ -4,7 +4,6 @@ extends Node2D
 @onready var score_label: Label = $CanvasLayer/HUD/Score
 @onready var hearts_label: Label = $CanvasLayer/HUD/Hearts
 @onready var moves_label: Label = $CanvasLayer/HUD/Moves
-@onready var music: AudioStreamPlayer = $Music
 
 func _ready() -> void:
 	# Theme
@@ -24,10 +23,6 @@ func _ready() -> void:
 	board.hearts_changed.connect(_on_hearts_changed)
 	board.moves_changed.connect(_on_moves_changed)
 	board.game_over.connect(_on_game_over)
-	
-	if not music.finished.is_connected(func(): pass):
-		music.finished.connect(func(): music.play())
-	music.play()
 
 func _on_score_changed(v:int) -> void:
 	score_label.text = "Score: %d" % v
@@ -39,7 +34,6 @@ func _on_moves_changed(v:int) -> void:
 	moves_label.text = "Moves: %d" % v
 
 func _on_game_over() -> void:
-	music.stop()
 	var overlay := Control.new()
 	overlay.name = "GameOverOverlay"
 	overlay.anchor_right = 1.0

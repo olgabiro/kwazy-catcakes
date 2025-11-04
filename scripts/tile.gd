@@ -43,7 +43,7 @@ func make_angry() -> void:
 		if anger >= 3:
 			emit_signal("scratched")
 			emit_signal("explosion", Vector2(-50, -50))
-			calm_down()
+			calm_down()		
 
 func calm_down() -> void:
 	anger = 0
