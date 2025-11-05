@@ -3,7 +3,6 @@ extends Node2D
 @onready var board: Board = $Board
 @onready var score_label: Label = $CanvasLayer/HUD/Score
 @onready var hearts_label: Label = $CanvasLayer/HUD/Hearts
-@onready var moves_label: Label = $CanvasLayer/HUD/Moves
 
 func _ready() -> void:
 	# Theme
@@ -16,12 +15,10 @@ func _ready() -> void:
 	score_label.add_theme_color_override("font_color", font_col)
 	var emoji_font = load("res://assets/fonts/NotoColorEmoji.ttf")
 	hearts_label.add_theme_font_override("font", emoji_font)
-	moves_label.add_theme_color_override("font_color", font_col)
 	_layout_board()
 	# Connect signals
 	board.score_changed.connect(_on_score_changed)
 	board.hearts_changed.connect(_on_hearts_changed)
-	board.moves_changed.connect(_on_moves_changed)
 	board.game_over.connect(_on_game_over)
 
 func _on_score_changed(v:int) -> void:
@@ -29,9 +26,6 @@ func _on_score_changed(v:int) -> void:
 
 func _on_hearts_changed(v:int) -> void:
 	hearts_label.text = "❤".repeat(max(v,0)) + "🖤".repeat(min(5-v,5))
-
-func _on_moves_changed(v:int) -> void:
-	moves_label.text = "Moves: %d" % v
 
 func _on_game_over() -> void:
 	var overlay := Control.new()
@@ -65,7 +59,7 @@ func _on_game_over() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if board.hearts <= 0 or board.moves_left <= 0:
+		if board.hearts <= 0:
 			get_tree().reload_current_scene()
 
 func _notification(what):
@@ -79,3 +73,13 @@ func _layout_board() -> void:
 	var x := vp.x * 0.5
 	var y := top_margin + board_px.y * 0.5
 	$Board.position = Vector2(x, y)
+
+func _on_check_button_toggled(toggled_on: bool) -> void:
+	var background_index = AudioServer.get_bus_index("Background")
+	var sfx_index = AudioServer.get_bus_index("SFX")
+	if toggled_on:
+		AudioServer.set_bus_mute(background_index, true)
+		AudioServer.set_bus_mute(sfx_index, true)
+	else:
+		AudioServer.set_bus_mute(background_index, false)
+		AudioServer.set_bus_mute(sfx_index, false)

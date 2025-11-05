@@ -3,22 +3,20 @@ class_name Board
 
 signal score_changed(v:int)
 signal hearts_changed(v:int)
-signal moves_changed(v:int)
 signal explosion(v:Vector2)
 signal game_over
 
 const COLS := 8
 const ROWS := 7
 const TILE_SIZE := 128.0
-const MOVE_LIMIT := 30
 const START_HEARTS := 5
 
 var grid: Array = [] # 2D: [x][y] -> Tile
 var selected: Tile
 var rng := RandomNumberGenerator.new()
 var score := 0
+var max_score := 0
 var hearts := START_HEARTS
-var moves_left := MOVE_LIMIT
 var is_dragging := false
 var drag_start := Vector2.ZERO
 var drag_threshold := 18.0
@@ -36,7 +34,6 @@ func _ready() -> void:
 func _emit_all() -> void:
 	emit_signal("score_changed", score)
 	emit_signal("hearts_changed", hearts)
-	emit_signal("moves_changed", moves_left)
 
 func _init_grid() -> void:
 	grid.resize(COLS)
@@ -79,7 +76,6 @@ func _on_tile_clicked(t: Tile) -> void:
 func _is_adjacent(a: Vector2i, b: Vector2i) -> bool:
 	return abs(a.x-b.x) + abs(a.y-b.y) == 1
 
-
 func _perform_swap(a: Tile, b: Tile) -> void:
 	# swap in grid
 	var ga := a.grid_pos
@@ -102,13 +98,12 @@ func _perform_swap(a: Tile, b: Tile) -> void:
 		_animate_move(a)
 		_animate_move(b)
 		return
-	moves_left -= 1
-	emit_signal("moves_changed", moves_left)
+
 	# Cats get angry if moved
 	if a.is_cat(): a.make_angry()
 	if b.is_cat(): b.make_angry()
 	_clear_and_cascade(matched)
-	if moves_left <= 0 or hearts <= 0:
+	if hearts <= 0:
 		emit_signal("game_over")
 
 func _animate_move(t: Tile) -> void:
@@ -157,6 +152,8 @@ func _find_matches() -> Array[Vector2i]:
 		for x in range(COLS):
 			var t: Tile = grid[x][y] as Tile
 			var tp := t.type
+			if t.to_delete:
+				to_clear.append(Vector2i(x, y))
 			if tp == run_type:
 				run_len += 1
 			else:
