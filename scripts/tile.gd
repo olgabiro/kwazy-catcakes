@@ -17,6 +17,7 @@ var type: int = 0
 var anger: int = 0
 var grid_pos: Vector2i
 var base_scale := Vector2.ONE
+var to_delete = false
 
 @onready var sprite: Sprite2D = $Sprite2D
 
@@ -43,11 +44,7 @@ func make_angry() -> void:
 		if anger >= 3:
 			emit_signal("scratched")
 			emit_signal("explosion", position)
-			calm_down()		
-
-func calm_down() -> void:
-	anger = 0
-	_refresh_texture()
+			to_delete = true
 	
 func modulate_anger() -> void:
 	var r = 1.0 + 0.3 * anger

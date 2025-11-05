@@ -152,6 +152,8 @@ func _find_matches() -> Array[Vector2i]:
 		for x in range(COLS):
 			var t: Tile = grid[x][y] as Tile
 			var tp := t.type
+			if t.to_delete:
+				to_clear.append(Vector2i(x, y))
 			if tp == run_type:
 				run_len += 1
 			else:
