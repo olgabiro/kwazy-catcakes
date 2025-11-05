@@ -77,7 +77,7 @@ func _layout_board() -> void:
 func _on_check_button_toggled(toggled_on: bool) -> void:
 	var background_index = AudioServer.get_bus_index("Background")
 	var sfx_index = AudioServer.get_bus_index("SFX")
-	if toggled_on:
+	if !toggled_on:
 		AudioServer.set_bus_mute(background_index, true)
 		AudioServer.set_bus_mute(sfx_index, true)
 	else:

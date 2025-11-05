@@ -70,6 +70,7 @@ offset_right = 1697.0
 offset_bottom = 181.0
 scale = Vector2(2.5, 2.5)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_rvslj")
+button_pressed = true
 text = "Sound"
 flat = true
 
