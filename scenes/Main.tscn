@@ -63,11 +63,22 @@ offset_bottom = 136.0
 theme_override_font_sizes/font_size = 70
 text = "❤❤❤❤❤"
 
-[node name="CheckButton" type="CheckButton" parent="CanvasLayer"]
-offset_left = 1600.0
-offset_top = 150.0
-offset_right = 1697.0
-offset_bottom = 181.0
+[node name="MaxScore" type="Label" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = 1464.0
+offset_top = 144.0
+offset_right = 1864.0
+offset_bottom = 240.0
+theme_override_font_sizes/font_size = 70
+text = "Max: 0"
+horizontal_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/HUD"]
+layout_mode = 0
+offset_left = 1640.0001
+offset_top = 270.00003
+offset_right = 1737.0001
+offset_bottom = 301.00003
 scale = Vector2(2.5, 2.5)
 theme_override_styles/focus = SubResource("StyleBoxEmpty_rvslj")
 button_pressed = true
@@ -76,4 +87,4 @@ flat = true
 
 [node name="Board" parent="." instance=ExtResource("2")]
 
-[connection signal="toggled" from="CanvasLayer/CheckButton" to="." method="_on_check_button_toggled"]
+[connection signal="toggled" from="CanvasLayer/HUD/CheckButton" to="." method="_on_check_button_toggled"]

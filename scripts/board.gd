@@ -15,7 +15,6 @@ var grid: Array = [] # 2D: [x][y] -> Tile
 var selected: Tile
 var rng := RandomNumberGenerator.new()
 var score := 0
-var max_score := 0
 var hearts := START_HEARTS
 var is_dragging := false
 var drag_start := Vector2.ZERO
@@ -151,18 +150,19 @@ func _find_matches() -> Array[Vector2i]:
 		var run_len := 0
 		for x in range(COLS):
 			var t: Tile = grid[x][y] as Tile
-			var tp := t.type
-			if t.to_delete:
-				to_clear.append(Vector2i(x, y))
-			if tp == run_type:
-				run_len += 1
-			else:
-				if run_len >= 3:
-					for rx in range(run_start, run_start+run_len):
-						to_clear.append(Vector2i(rx, y))
-				run_type = tp
-				run_start = x
-				run_len = 1
+			if t != null:
+				var tp := t.type
+				if t.to_delete:
+					to_clear.append(Vector2i(x, y))
+				if tp == run_type:
+					run_len += 1
+				else:
+					if run_len >= 3:
+						for rx in range(run_start, run_start+run_len):
+							to_clear.append(Vector2i(rx, y))
+					run_type = tp
+					run_start = x
+					run_len = 1
 		# tail
 		if run_len >= 3:
 			for rx in range(run_start, run_start+run_len):
@@ -174,16 +174,17 @@ func _find_matches() -> Array[Vector2i]:
 		var run_len := 0
 		for y in range(ROWS):
 			var t: Tile = grid[x][y] as Tile
-			var tp := t.type
-			if tp == run_type:
-				run_len += 1
-			else:
-				if run_len >= 3:
-					for ry in range(run_start, run_start+run_len):
-						to_clear.append(Vector2i(x, ry))
-				run_type = tp
-				run_start = y
-				run_len = 1
+			if t != null:
+				var tp := t.type
+				if tp == run_type:
+					run_len += 1
+				else:
+					if run_len >= 3:
+						for ry in range(run_start, run_start+run_len):
+							to_clear.append(Vector2i(x, ry))
+					run_type = tp
+					run_start = y
+					run_len = 1
 		if run_len >= 3:
 			for ry in range(run_start, run_start+run_len):
 				to_clear.append(Vector2i(x, ry))

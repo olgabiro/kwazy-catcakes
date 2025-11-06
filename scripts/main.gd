@@ -3,6 +3,7 @@ extends Node2D
 @onready var board: Board = $Board
 @onready var score_label: Label = $CanvasLayer/HUD/Score
 @onready var hearts_label: Label = $CanvasLayer/HUD/Hearts
+@onready var max_score_label: Label = $CanvasLayer/HUD/MaxScore
 
 func _ready() -> void:
 	# Theme
@@ -15,6 +16,7 @@ func _ready() -> void:
 	score_label.add_theme_color_override("font_color", font_col)
 	var emoji_font = load("res://assets/fonts/NotoColorEmoji.ttf")
 	hearts_label.add_theme_font_override("font", emoji_font)
+	max_score_label.text = "Max: " + str(Game.max_score)
 	_layout_board()
 	# Connect signals
 	board.score_changed.connect(_on_score_changed)
@@ -23,6 +25,10 @@ func _ready() -> void:
 
 func _on_score_changed(v:int) -> void:
 	score_label.text = "Score: %d" % v
+	var max_score = max(Game.max_score, v)
+	max_score_label.text = "Max: " + str(max_score)
+	Game.max_score = max_score
+	
 
 func _on_hearts_changed(v:int) -> void:
 	hearts_label.text = "❤".repeat(max(v,0)) + "🖤".repeat(min(5-v,5))
@@ -36,6 +42,7 @@ func _on_game_over() -> void:
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.gui_input.connect(func(event: InputEvent):
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			#Game.max_score = max(Game.max_score, board.score)
 			get_tree().reload_current_scene()
 	)
 	$CanvasLayer/HUD.add_child(overlay)
